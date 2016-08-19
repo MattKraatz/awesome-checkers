@@ -5,8 +5,8 @@ let arrayOfPieces = [];
 // Returns a piece from the pieces array if it exists
 // Otherwise returns undefined
 function getPieceFromArray(domNode) {
-  let x = domNode.getAttribute('x');
-  let y = domNode.getAttribute('y');
+  let x = domNode.attr('x');
+  let y = domNode.attr('y');
 
   let locatedNode = arrayOfPieces.filter(function(piece) {
     if (piece.x == x && piece.y == y) {
@@ -15,7 +15,7 @@ function getPieceFromArray(domNode) {
   });
 
   if (locatedNode.length) {
-    return locatedNode;
+    return locatedNode[0];
   } else {
     return undefined;
   }

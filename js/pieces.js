@@ -1,6 +1,7 @@
 "use strict";
 
 var Piece = function(){
+  this.canMove = false;
   this.canJump = false;
   this.canBeJumped = false;
   this.color = null;
