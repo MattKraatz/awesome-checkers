@@ -11,16 +11,23 @@ Piece.prototype.jump = function(){
 Piece.prototype.remove = function(){
 
 }
-
-var RedPiece = function (){
-  this.color = "red"
+Piece.prototype.getCoordinates = function(){
+  
 }
-RedPiece.prototype = new Piece()
 
-var BlackPiece = function (){
-  this.color = "black"
+var RedPiece = function (x, y){
+  this.color = "red";
+  this.x = x;
+  this.y = y;
 }
-BlackPiece.prototype = new Piece()
+RedPiece.prototype = new Piece();
 
-module.exports = {Piece, RedPiece, BlackPiece}
+var BlackPiece = function (x, y){
+  this.color = "black";
+  this.x = x;
+  this.y = y;
+}
+BlackPiece.prototype = new Piece();
+
+module.exports = {Piece, RedPiece, BlackPiece};
 
