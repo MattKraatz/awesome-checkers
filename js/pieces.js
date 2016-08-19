@@ -1,4 +1,5 @@
 "use strict";
+
 var Piece = function(){
   this.canJump = false;
   this.canBeJumped = false;
@@ -20,4 +21,6 @@ var BlackPiece = function (){
   this.color = "black"
 }
 BlackPiece.prototype = new Piece()
+
+module.exports = {Piece, RedPiece, BlackPiece}
 

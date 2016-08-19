@@ -1,4 +1,6 @@
 "use strict";
+var pieces = require('./pieces.js')
+
 function createCheckerboard () {
   var checkerboard = ""
   for (let i=7; i>=0; i--) {
@@ -11,4 +13,12 @@ function createCheckerboard () {
   $(".checkerBoard").append(checkerboard)
 }
 
-module.exports = createCheckerboard;
+function populateRedPieces (){
+
+}
+
+function populateBlackPieces (){
+
+}
+
+module.exports = {createCheckerboard};
