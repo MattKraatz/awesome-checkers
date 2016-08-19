@@ -53,19 +53,18 @@ function createBlackPieces (){
     }
   }
 }
-// function createPieces (row1, row2, row3, pieceColor){
-//   for(let x=0; x<8; i++){
-//     if (y === row1|| y === 2) {
-//       if(x %2 === 0){
-//         var red = new pieces.redPiece()
-//       }
-//     }
-//     if (y === 1) {
-//       if ((x+1)%2===0){
-//         var red = new pieces.redPiece()
-//       }
-//     }
-//   }
-// }
 
-module.exports = {createCheckerboard, createRedPieces, createBlackPieces, getArrayOfPieces};
+function populatePieces() {
+    for(let x=0; x<8; x++){
+      for (let y=0; y<8; y++){
+        $(`[x=${x}][y=${y}] > div`).removeClass("redPiece blackPiece");
+        arrayOfPieces.forEach(function(piece){
+          if (piece.x === x && piece.y === y) {
+            $(`[x=${x}][y=${y}] > div`).addClass(`${piece.color}Piece`);
+          }
+        })
+      }
+    }
+}
+
+module.exports = {createCheckerboard, createRedPieces, createBlackPieces, getArrayOfPieces, populatePieces};

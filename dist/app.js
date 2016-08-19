@@ -5,6 +5,7 @@ var Piece = function(){
   this.canJump = false;
   this.canBeJumped = false;
   this.color = null;
+  this.node = null;
 }
 Piece.prototype.jump = function(){
 
@@ -12,21 +13,31 @@ Piece.prototype.jump = function(){
 Piece.prototype.remove = function(){
 
 }
-Piece.prototype.getCoordinates = function(){
-  
+Piece.prototype.setNode = function() {
+  this.node = $(`[x=${this.x}][y=${this.y}]`);
+}
+
+/**
+ * Changes the coordinates of this piece
+ * @param  {Integer} x X coordinate of piece
+ * @param  {Integer} y Y coordinate of piece
+ */
+Piece.prototype.changeCoords = function(x, y) {
+  this.x = x
+  this.y = y
+  this.setNode()
 }
 
 var RedPiece = function (x, y){
   this.color = "red";
-  this.x = x;
-  this.y = y;
+  this.changeCoords(x, y);
+
 }
 RedPiece.prototype = new Piece();
 
 var BlackPiece = function (x, y){
   this.color = "black";
-  this.x = x;
-  this.y = y;
+  this.changeCoords(x, y);
 }
 BlackPiece.prototype = new Piece();
 
@@ -40,7 +51,9 @@ var checkerBoard = require('./scripts.js');
 checkerBoard.createCheckerboard()
 checkerBoard.createRedPieces()
 checkerBoard.createBlackPieces()
+checkerBoard.populatePieces()
 console.log(checkerBoard.getArrayOfPieces())
+
 },{"./scripts.js":3}],3:[function(require,module,exports){
 "use strict";
 var pieces = require('./pieces.js');
@@ -97,21 +110,20 @@ function createBlackPieces (){
     }
   }
 }
-// function createPieces (row1, row2, row3, pieceColor){
-//   for(let x=0; x<8; i++){
-//     if (y === row1|| y === 2) {
-//       if(x %2 === 0){
-//         var red = new pieces.redPiece()
-//       }
-//     }
-//     if (y === 1) {
-//       if ((x+1)%2===0){
-//         var red = new pieces.redPiece()
-//       }
-//     }
-//   }
-// }
 
-module.exports = {createCheckerboard, createRedPieces, createBlackPieces, getArrayOfPieces};
+function populatePieces() {
+    for(let x=0; x<8; x++){
+      for (let y=0; y<8; y++){
+        $(`[x=${x}][y=${y}] > div`).removeClass("redPiece blackPiece");
+        arrayOfPieces.forEach(function(piece){
+          if (piece.x === x && piece.y === y) {
+            $(`[x=${x}][y=${y}] > div`).addClass(`${piece.color}Piece`);
+          }
+        })
+      }
+    }
+}
+
+module.exports = {createCheckerboard, createRedPieces, createBlackPieces, getArrayOfPieces, populatePieces};
 
 },{"./pieces.js":1}]},{},[2]);
