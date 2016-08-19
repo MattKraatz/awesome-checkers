@@ -49,8 +49,8 @@ module.exports = {Piece, RedPiece, BlackPiece};
 var checkerBoard = require('./scripts.js');
 
 checkerBoard.createCheckerboard()
-checkerBoard.createRedPieces()
-checkerBoard.createBlackPieces()
+checkerBoard.createPieces(0, 1, 2, "RedPiece", 0)
+checkerBoard.createPieces(5, 6, 7, "BlackPiece", 1)
 checkerBoard.populatePieces()
 console.log(checkerBoard.getArrayOfPieces())
 
@@ -76,36 +76,18 @@ function createCheckerboard () {
 }
 
 //Rows where y= 0, 1, 2
-function createRedPieces (){
+function createPieces (row1, row2, row3, piece, number){
   for(let x=0; x<8; x++){
-    for (let y=0; y<3; y++){
+    for (let y=row1; y<(row3+1); y++){
       //If the row is 0 or 2 AND the x-value is even, create a red piece with correct coordinates
-      if ((y === 0 || y === 2) && x%2 === 0){
-          var red = new pieces.RedPiece(x,y)
-          arrayOfPieces.push(red)
+      if ((y === row1 || y === row3) && (x+number)%2 === 0){
+          var newPiece = new pieces[piece](x,y)
+          arrayOfPieces.push(newPiece)
         }
       //If the row is 1 AND the x-value is odd, create a red piece with correct coordinates
-      if (y === 1 && (x+1)%2===0){
-          var red = new pieces.RedPiece(x,y)
-          arrayOfPieces.push(red)
-      }
-    }
-  }
-}
-
-//Rows where y= 5, 6, 7
-function createBlackPieces (){
-  for(let x=0; x<8; x++){
-    for (let y=5; y<8; y++){
-      //If the row is 5 or 7 AND the x-value is odd, create a black piece with correct coordinates
-      if ((y === 5 || y === 7) && (x+1)%2 === 0){
-          var black = new pieces.BlackPiece(x,y)
-          arrayOfPieces.push(black)
-        }
-      //If the row is 6 AND the x-value is even, create a black piece with correct coordinates
-      if (y === 6 && x%2===0){
-          var black = new pieces.BlackPiece(x,y)
-          arrayOfPieces.push(black)
+      if (y === row2 && (x+1-number)%2===0){
+          var newPiece = new pieces[piece](x,y)
+          arrayOfPieces.push(newPiece)
       }
     }
   }
@@ -124,6 +106,6 @@ function populatePieces() {
     }
 }
 
-module.exports = {createCheckerboard, createRedPieces, createBlackPieces, getArrayOfPieces, populatePieces};
+module.exports = {createCheckerboard, createPieces, getArrayOfPieces, populatePieces};
 
 },{"./pieces.js":1}]},{},[2]);
