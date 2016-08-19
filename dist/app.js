@@ -9,14 +9,42 @@ function setEvents () {
 	$('.emptySpace').on('click', checkSpace);
 
 	function checkSpace (e) {
-    let currentPiece = pieces.getPieceFromArray(e.currentTarget);
-		console.dir(currentPiece);
+    let currentPiece = pieces.getPieceFromArray($(e.currentTarget));
     if(!_movePhase && currentPiece) {
+		  console.dir(currentPiece);
 			var spacex = parseInt(e.currentTarget.attributes.x.value);
 			var spacey = parseInt(e.currentTarget.attributes.y.value);
-      _movePhase = true;
-		};
+      _movePhase = checkMoves(spacex, spacey, currentPiece);
+      console.log("move phase is: ", _movePhase)
+		}
 	};
+
+  function checkMoves (x, y, currentPiece){
+    if(currentPiece.color === "red"){
+      let topRight = pieces.getPieceFromArray($(`[x=${x+1}][y=${y+1}]`));
+      let topLeft = pieces.getPieceFromArray($(`[x=${x-1}][y=${y+1}]`));
+      let topJumpRight = pieces.getPieceFromArray($(`[x=${x+2}][y=${y+2}]`));
+      let topJumpLeft = pieces.getPieceFromArray($(`[x=${x-2}][y=${y+2}]`));
+      if (!topRight || !topLeft){
+        console.log("can move")
+        currentPiece.canMove = true;
+      }
+      if (topRight){
+        if (topRight.color === "black" && !topJumpRight){
+          console.log("can jump right")
+          currentPiece.canJump = true;
+        }
+      } 
+      if (topLeft){
+        if (topLeft.color === "black" && !topJumpLeft){
+          console.log("can jump left")
+          currentPiece.canJump = true;
+        }
+      }
+      return currentPiece.canMove || currentPiece.canJump
+    }
+  };
+
 };
 
 module.exports = setEvents;
@@ -26,6 +54,7 @@ module.exports = setEvents;
 "use strict";
 
 var Piece = function(){
+  this.canMove = false;
   this.canJump = false;
   this.canBeJumped = false;
   this.color = null;
@@ -88,8 +117,8 @@ let arrayOfPieces = [];
 // Returns a piece from the pieces array if it exists
 // Otherwise returns undefined
 function getPieceFromArray(domNode) {
-  let x = domNode.getAttribute('x');
-  let y = domNode.getAttribute('y');
+  let x = domNode.attr('x');
+  let y = domNode.attr('y');
 
   let locatedNode = arrayOfPieces.filter(function(piece) {
     if (piece.x == x && piece.y == y) {
@@ -98,7 +127,7 @@ function getPieceFromArray(domNode) {
   });
 
   if (locatedNode.length) {
-    return locatedNode;
+    return locatedNode[0];
   } else {
     return undefined;
   }
