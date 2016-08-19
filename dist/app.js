@@ -1,6 +1,26 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 "use strict";
 
+var _movePhase = false;
+
+function setEvents () {
+	$('.emptySpace').on('click', checkSpace);
+
+	function checkSpace (e) {
+		if(!_movePhase && e.currentTarget.children([0])) {
+			var spacex = parseInt(e.currentTarget.attributes.x.value);
+			var spacey = parseInt(e.currentTarget.attributes.y.value);
+      _movePhase = true;
+		};
+	};
+};
+
+module.exports = setEvents;
+
+
+},{}],2:[function(require,module,exports){
+"use strict";
+
 var Piece = function(){
   this.canJump = false;
   this.canBeJumped = false;
@@ -44,17 +64,19 @@ BlackPiece.prototype = new Piece();
 module.exports = {Piece, RedPiece, BlackPiece};
 
 
-},{}],2:[function(require,module,exports){
+},{}],3:[function(require,module,exports){
 "use strict";
 var checkerBoard = require('./scripts.js');
+var events = require('./events.js');
 
 checkerBoard.createCheckerboard()
 checkerBoard.createPieces(0, 1, 2, "RedPiece", 0)
 checkerBoard.createPieces(5, 6, 7, "BlackPiece", 1)
 checkerBoard.populatePieces()
+events();
 console.log(checkerBoard.getArrayOfPieces())
 
-},{"./scripts.js":3}],3:[function(require,module,exports){
+},{"./events.js":1,"./scripts.js":4}],4:[function(require,module,exports){
 "use strict";
 var pieces = require('./pieces.js');
 let arrayOfPieces = [];
@@ -108,4 +130,4 @@ function populatePieces() {
 
 module.exports = {createCheckerboard, createPieces, getArrayOfPieces, populatePieces};
 
-},{"./pieces.js":1}]},{},[2]);
+},{"./pieces.js":2}]},{},[3]);
