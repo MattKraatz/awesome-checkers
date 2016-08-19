@@ -10,7 +10,7 @@ module.exports = function(grunt) {
   // Plugin configuration
   grunt.initConfig({
     browserify: {
-      './dist/app.js': ['./scripts.js']
+      './dist/app.js': ['./js/scripts.js']
     },
     jshint: {
       all: {

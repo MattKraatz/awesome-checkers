@@ -1,3 +1,32 @@
 body {
   background-color: blue;
 }
+
+.emptySpace {
+    height: 50px;
+}
+
+.row:nth-child(even) .emptySpace:nth-child(even) {
+    background-color: white;
+}
+
+.row:nth-child(even) .emptySpace:nth-child(odd) {
+    background-color: black;
+}
+
+.row:nth-child(odd) .emptySpace:nth-child(odd) {
+    background-color: white;
+}
+
+.row:nth-child(odd) .emptySpace:nth-child(even) {
+    background-color: black;
+}
+
+.redPiece {
+    border-radius: 100%;
+    border: 1px solid red;
+}
+
+/*.blackPiece {
+
+}*/
