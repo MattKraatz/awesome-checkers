@@ -8,3 +8,5 @@ function createCheckerboard () {
     $(".checkerBoard").append("<div class='col-xs-2'></div></div>")
   }
 }
+
+createCheckerboard();
