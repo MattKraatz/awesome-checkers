@@ -30,8 +30,8 @@ Piece.prototype.changeCoords = function(x, y) {
 var RedPiece = function (x, y){
   this.color = "red";
   this.changeCoords(x, y);
-
 }
+
 RedPiece.prototype = new Piece();
 
 var BlackPiece = function (x, y){

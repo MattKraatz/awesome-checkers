@@ -2,6 +2,25 @@
 var pieces = require('./pieces.js');
 let arrayOfPieces = [];
 
+// Returns a piece from the pieces array if it exists
+// Otherwise returns undefined
+function getPieceFromArray(domNode) {
+  let x = domNode.getAttribute('x');
+  let y = domNode.getAttribute('y');
+
+  let locatedNode = arrayOfPieces.filter(function(piece) {
+    if (piece.x == x && piece.y == y) {
+      return piece;
+    }
+  });
+
+  if (locatedNode.length) {
+    return locatedNode;
+  } else {
+    return undefined;
+  }
+}
+
 function getArrayOfPieces (){
   return arrayOfPieces;
 }
@@ -49,4 +68,4 @@ function populatePieces() {
     }
 }
 
-module.exports = {createCheckerboard, createPieces, getArrayOfPieces, populatePieces};
+module.exports = {createCheckerboard, createPieces, getArrayOfPieces, populatePieces, getPieceFromArray};

@@ -1,13 +1,17 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 "use strict";
 
+let pieces = require('./scripts');
+
 var _movePhase = false;
 
 function setEvents () {
 	$('.emptySpace').on('click', checkSpace);
 
 	function checkSpace (e) {
-		if(!_movePhase && e.currentTarget.children([0])) {
+    let currentPiece = pieces.getPieceFromArray(e.currentTarget);
+		console.dir(currentPiece);
+    if(!_movePhase && currentPiece) {
 			var spacex = parseInt(e.currentTarget.attributes.x.value);
 			var spacey = parseInt(e.currentTarget.attributes.y.value);
       _movePhase = true;
@@ -18,7 +22,7 @@ function setEvents () {
 module.exports = setEvents;
 
 
-},{}],2:[function(require,module,exports){
+},{"./scripts":4}],2:[function(require,module,exports){
 "use strict";
 
 var Piece = function(){
@@ -51,8 +55,8 @@ Piece.prototype.changeCoords = function(x, y) {
 var RedPiece = function (x, y){
   this.color = "red";
   this.changeCoords(x, y);
-
 }
+
 RedPiece.prototype = new Piece();
 
 var BlackPiece = function (x, y){
@@ -80,6 +84,25 @@ console.log(checkerBoard.getArrayOfPieces())
 "use strict";
 var pieces = require('./pieces.js');
 let arrayOfPieces = [];
+
+// Returns a piece from the pieces array if it exists
+// Otherwise returns undefined
+function getPieceFromArray(domNode) {
+  let x = domNode.getAttribute('x');
+  let y = domNode.getAttribute('y');
+
+  let locatedNode = arrayOfPieces.filter(function(piece) {
+    if (piece.x == x && piece.y == y) {
+      return piece;
+    }
+  });
+
+  if (locatedNode.length) {
+    return locatedNode;
+  } else {
+    return undefined;
+  }
+}
 
 function getArrayOfPieces (){
   return arrayOfPieces;
@@ -128,6 +151,6 @@ function populatePieces() {
     }
 }
 
-module.exports = {createCheckerboard, createPieces, getArrayOfPieces, populatePieces};
+module.exports = {createCheckerboard, createPieces, getArrayOfPieces, populatePieces, getPieceFromArray};
 
 },{"./pieces.js":2}]},{},[3]);
