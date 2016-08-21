@@ -52,6 +52,7 @@ checkerBoard.createCheckerboard()
 checkerBoard.createRedPieces()
 checkerBoard.createBlackPieces()
 checkerBoard.populatePieces()
+
 console.log(checkerBoard.getArrayOfPieces())
 
 },{"./scripts.js":3}],3:[function(require,module,exports){
@@ -111,10 +112,12 @@ function createBlackPieces (){
   }
 }
 
+// Loop through checkerboard, remove classes from every DIV
 function populatePieces() {
     for(let x=0; x<8; x++){
       for (let y=0; y<8; y++){
         $(`[x=${x}][y=${y}] > div`).removeClass("redPiece blackPiece");
+        // Loop through pieces array, add classes to board according to piece coords
         arrayOfPieces.forEach(function(piece){
           if (piece.x === x && piece.y === y) {
             $(`[x=${x}][y=${y}] > div`).addClass(`${piece.color}Piece`);
