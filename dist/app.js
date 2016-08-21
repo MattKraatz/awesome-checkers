@@ -1,7 +1,60 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 "use strict";
 
+let pieces = require('./scripts');
+
+var _movePhase = false;
+
+function setEvents () {
+	$('.emptySpace').on('click', checkSpace);
+
+	function checkSpace (e) {
+    let currentPiece = pieces.getPieceFromArray($(e.currentTarget));
+    if(!_movePhase && currentPiece) {
+		  console.dir(currentPiece);
+			var spacex = parseInt(e.currentTarget.attributes.x.value);
+			var spacey = parseInt(e.currentTarget.attributes.y.value);
+      _movePhase = checkMoves(spacex, spacey, currentPiece);
+      console.log("move phase is: ", _movePhase)
+		}
+	};
+
+  function checkMoves (x, y, currentPiece){
+    if(currentPiece.color === "red"){
+      let topRight = pieces.getPieceFromArray($(`[x=${x+1}][y=${y+1}]`));
+      let topLeft = pieces.getPieceFromArray($(`[x=${x-1}][y=${y+1}]`));
+      let topJumpRight = pieces.getPieceFromArray($(`[x=${x+2}][y=${y+2}]`));
+      let topJumpLeft = pieces.getPieceFromArray($(`[x=${x-2}][y=${y+2}]`));
+      if (!topRight || !topLeft){
+        console.log("can move")
+        currentPiece.canMove = true;
+      }
+      if (topRight){
+        if (topRight.color === "black" && !topJumpRight){
+          console.log("can jump right")
+          currentPiece.canJump = true;
+        }
+      }
+      if (topLeft){
+        if (topLeft.color === "black" && !topJumpLeft){
+          console.log("can jump left")
+          currentPiece.canJump = true;
+        }
+      }
+      return currentPiece.canMove || currentPiece.canJump
+    }
+  };
+
+};
+
+module.exports = setEvents;
+
+
+},{"./scripts":4}],2:[function(require,module,exports){
+"use strict";
+
 var Piece = function(){
+  this.canMove = false;
   this.canJump = false;
   this.canBeJumped = false;
   this.color = null;
@@ -31,8 +84,8 @@ Piece.prototype.changeCoords = function(x, y) {
 var RedPiece = function (x, y){
   this.color = "red";
   this.changeCoords(x, y);
-
 }
+
 RedPiece.prototype = new Piece();
 
 var BlackPiece = function (x, y){
@@ -44,21 +97,41 @@ BlackPiece.prototype = new Piece();
 module.exports = {Piece, RedPiece, BlackPiece};
 
 
-},{}],2:[function(require,module,exports){
+},{}],3:[function(require,module,exports){
 "use strict";
 var checkerBoard = require('./scripts.js');
+var events = require('./events.js');
 
 checkerBoard.createCheckerboard()
-checkerBoard.createRedPieces()
-checkerBoard.createBlackPieces()
+checkerBoard.createPieces(0, 1, 2, "RedPiece", 0)
+checkerBoard.createPieces(5, 6, 7, "BlackPiece", 1)
 checkerBoard.populatePieces()
-
+events();
 console.log(checkerBoard.getArrayOfPieces())
 
-},{"./scripts.js":3}],3:[function(require,module,exports){
+},{"./events.js":1,"./scripts.js":4}],4:[function(require,module,exports){
 "use strict";
 var pieces = require('./pieces.js');
 let arrayOfPieces = [];
+
+// Returns a piece from the pieces array if it exists
+// Otherwise returns undefined
+function getPieceFromArray(domNode) {
+  let x = domNode.attr('x');
+  let y = domNode.attr('y');
+
+  let locatedNode = arrayOfPieces.filter(function(piece) {
+    if (piece.x == x && piece.y == y) {
+      return piece;
+    }
+  });
+
+  if (locatedNode.length) {
+    return locatedNode[0];
+  } else {
+    return undefined;
+  }
+}
 
 function getArrayOfPieces (){
   return arrayOfPieces;
@@ -77,36 +150,18 @@ function createCheckerboard () {
 }
 
 //Rows where y= 0, 1, 2
-function createRedPieces (){
+function createPieces (row1, row2, row3, piece, number){
   for(let x=0; x<8; x++){
-    for (let y=0; y<3; y++){
+    for (let y=row1; y<(row3+1); y++){
       //If the row is 0 or 2 AND the x-value is even, create a red piece with correct coordinates
-      if ((y === 0 || y === 2) && x%2 === 0){
-          var red = new pieces.RedPiece(x,y)
-          arrayOfPieces.push(red)
+      if ((y === row1 || y === row3) && (x+number)%2 === 0){
+          var newPiece = new pieces[piece](x,y)
+          arrayOfPieces.push(newPiece)
         }
       //If the row is 1 AND the x-value is odd, create a red piece with correct coordinates
-      if (y === 1 && (x+1)%2===0){
-          var red = new pieces.RedPiece(x,y)
-          arrayOfPieces.push(red)
-      }
-    }
-  }
-}
-
-//Rows where y= 5, 6, 7
-function createBlackPieces (){
-  for(let x=0; x<8; x++){
-    for (let y=5; y<8; y++){
-      //If the row is 5 or 7 AND the x-value is odd, create a black piece with correct coordinates
-      if ((y === 5 || y === 7) && (x+1)%2 === 0){
-          var black = new pieces.BlackPiece(x,y)
-          arrayOfPieces.push(black)
-        }
-      //If the row is 6 AND the x-value is even, create a black piece with correct coordinates
-      if (y === 6 && x%2===0){
-          var black = new pieces.BlackPiece(x,y)
-          arrayOfPieces.push(black)
+      if (y === row2 && (x+1-number)%2===0){
+          var newPiece = new pieces[piece](x,y)
+          arrayOfPieces.push(newPiece)
       }
     }
   }
@@ -127,6 +182,6 @@ function populatePieces() {
     }
 }
 
-module.exports = {createCheckerboard, createRedPieces, createBlackPieces, getArrayOfPieces, populatePieces};
+module.exports = {createCheckerboard, createPieces, getArrayOfPieces, populatePieces, getPieceFromArray};
 
-},{"./pieces.js":1}]},{},[2]);
+},{"./pieces.js":2}]},{},[3]);
