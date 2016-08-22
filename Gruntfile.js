@@ -55,6 +55,13 @@ module.exports = function(grunt) {
         }
       }
     },
+    sass: {
+      dist: {
+        files: {
+          'css/main.css': 'sass/main.scss'
+        }
+      }
+    },
     htmlhint: {
       all: {
         src: ['./**/*.html', '!./node_modules/**/*', '!./bower_components/**/*'],
@@ -64,5 +71,5 @@ module.exports = function(grunt) {
       }
     }
   });
-  grunt.registerTask('default', ['browserify','watch']);
+  grunt.registerTask('default', ['browserify', 'sass', 'watch']);
 };

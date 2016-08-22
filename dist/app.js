@@ -34,7 +34,7 @@ function setEvents () {
           console.log("can jump right")
           currentPiece.canJump = true;
         }
-      } 
+      }
       if (topLeft){
         if (topLeft.color === "black" && !topJumpLeft){
           console.log("can jump left")
