@@ -6,6 +6,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-jsonlint');
   grunt.loadNpmTasks('grunt-htmlhint');
   grunt.loadNpmTasks('grunt-browserify');
+  grunt.loadNpmTasks('grunt-contrib-sass');
 
   // Plugin configuration
   grunt.initConfig({
@@ -55,6 +56,13 @@ module.exports = function(grunt) {
         }
       }
     },
+    sass: {
+      dist: {
+        files: {
+          'css/main.css' : 'sass/main.scss'
+        }
+      }
+    },
     htmlhint: {
       all: {
         src: ['./**/*.html', '!./node_modules/**/*', '!./bower_components/**/*'],
@@ -64,5 +72,5 @@ module.exports = function(grunt) {
       }
     }
   });
-  grunt.registerTask('default', ['browserify','watch']);
+  grunt.registerTask('default', ['browserify', 'sass', 'watch']);
 };
