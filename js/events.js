@@ -42,20 +42,34 @@ function setEvents () {
     let jump1 = pieces.getPieceFromArray($(`[x=${x+2}][y=${y+(2*number)}]`));
     let jump2 = pieces.getPieceFromArray($(`[x=${x-2}][y=${y+(2*number)}]`));
 
-    if (move1 === null || move2 === null){
+    if (move1 === null){
       console.log("can move")
       currentPiece.canMove = true;
+      currentPiece.validMoves.push({x: x + 1, y: y+number})
+      console.log(currentPiece)
+    }
+    if (move2 === null){
+      console.log("can move")
+      currentPiece.canMove = true;
+      currentPiece.validMoves.push({x: x - 1, y: y+number})
+      console.log(currentPiece)
     }
     if (move1){
       if (move1.color === opponent && !jump1){
         console.log("can jump")
         currentPiece.canJump = true;
+        currentPiece.canMove = false;
+        currentPiece.validJumps.push({x: x + 2, y: y+(2 * number)})
+        console.log(currentPiece)
       }
     }
     if (move2){
       if (move2.color === opponent && !jump2){
         console.log("can jump")
         currentPiece.canJump = true;
+        currentPiece.canMove = false;
+        currentPiece.validJumps.push({x: x - 2, y: y+(2 * number)})
+        console.log(currentPiece)
       }
     }
     _movePhase = currentPiece.canMove || currentPiece.canJump
@@ -73,6 +87,8 @@ function setEvents () {
   }
 
 };
+
+//Future fixes: Make .canMove = false if .canJump = true
 
 module.exports = setEvents;
 

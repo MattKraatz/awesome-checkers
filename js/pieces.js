@@ -6,6 +6,8 @@ var Piece = function(){
   this.canBeJumped = false;
   this.color = null;
   this.node = null;
+  this.validMoves = [];
+  this.validJumps = [];
 }
 Piece.prototype.jump = function(){
 
