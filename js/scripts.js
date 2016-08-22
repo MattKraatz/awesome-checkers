@@ -5,6 +5,7 @@ let arrayOfPieces = [];
 // Returns a piece from the pieces array if it exists
 // Otherwise returns undefined
 function getPieceFromArray(domNode) {
+  // console.log("passed in DOM node", domNode)
   let x = domNode.attr('x');
   let y = domNode.attr('y');
 
@@ -13,11 +14,13 @@ function getPieceFromArray(domNode) {
       return piece;
     }
   });
-
-  if (locatedNode.length) {
-    return locatedNode[0];
-  } else {
-    return undefined;
+  //Check to see if there is an x and y before returning anything
+  if (x && y){
+    if (locatedNode.length) {
+      return locatedNode[0];
+    } else {
+      return null;
+    }
   }
 }
 

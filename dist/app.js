@@ -4,6 +4,8 @@
 let pieces = require('./scripts');
 
 var _movePhase = false;
+var x;
+var y;
 
 function setEvents () {
 	$('.emptySpace').on('click', checkSpace);
@@ -12,38 +14,60 @@ function setEvents () {
     let currentPiece = pieces.getPieceFromArray($(e.currentTarget));
     if(!_movePhase && currentPiece) {
 		  console.dir(currentPiece);
-			var spacex = parseInt(e.currentTarget.attributes.x.value);
-			var spacey = parseInt(e.currentTarget.attributes.y.value);
-      _movePhase = checkMoves(spacex, spacey, currentPiece);
+			x = parseInt(e.currentTarget.attributes.x.value);
+			y = parseInt(e.currentTarget.attributes.y.value);
+      getPieceColor(currentPiece);
       console.log("move phase is: ", _movePhase)
 		}
 	};
 
-  function checkMoves (x, y, currentPiece){
+  function getPieceColor (currentPiece){
     if(currentPiece.color === "red"){
-      let topRight = pieces.getPieceFromArray($(`[x=${x+1}][y=${y+1}]`));
-      let topLeft = pieces.getPieceFromArray($(`[x=${x-1}][y=${y+1}]`));
-      let topJumpRight = pieces.getPieceFromArray($(`[x=${x+2}][y=${y+2}]`));
-      let topJumpLeft = pieces.getPieceFromArray($(`[x=${x-2}][y=${y+2}]`));
-      if (!topRight || !topLeft){
-        console.log("can move")
-        currentPiece.canMove = true;
-      }
-      if (topRight){
-        if (topRight.color === "black" && !topJumpRight){
-          console.log("can jump right")
-          currentPiece.canJump = true;
-        }
-      } 
-      if (topLeft){
-        if (topLeft.color === "black" && !topJumpLeft){
-          console.log("can jump left")
-          currentPiece.canJump = true;
-        }
-      }
-      return currentPiece.canMove || currentPiece.canJump
+      checkMoves(currentPiece, 1, "black")
+    }
+    if (currentPiece.color === "black"){
+      checkMoves(currentPiece, -1, "red")
     }
   };
+
+  function checkMoves (currentPiece, number, opponent) {
+    let move1 = pieces.getPieceFromArray($(`[x=${x+1}][y=${y+number}]`));
+    let move2 = pieces.getPieceFromArray($(`[x=${x-1}][y=${y+number}]`));
+    let jump1 = pieces.getPieceFromArray($(`[x=${x+2}][y=${y+(2*number)}]`));
+    let jump2 = pieces.getPieceFromArray($(`[x=${x-2}][y=${y+(2*number)}]`));
+
+    if (move1 === null || move2 === null){
+      console.log("can move")
+      currentPiece.canMove = true;
+      makeMove(currentPiece)
+    }
+    if (move1){
+      if (move1.color === opponent && !jump1){
+        console.log("can jump")
+        currentPiece.canJump = true;
+        makeMove(currentPiece)
+      }
+    }
+    if (move2){
+      if (move2.color === opponent && !jump2){
+        console.log("can jump")
+        currentPiece.canJump = true;
+        makeMove(currentPiece)
+      }
+    }
+    _movePhase = currentPiece.canMove || currentPiece.canJump
+  };
+
+  function makeMove(currentPiece){
+    if (_movePhase) {
+      $('.emptySpace').on('click', getLocation);
+
+      function getLocation(e){
+        var newLocation = getPieceFromArray(e.currentTarget)
+        console.log("New Location", newLocation)
+      }
+    }
+  }
 
 };
 
@@ -117,6 +141,7 @@ let arrayOfPieces = [];
 // Returns a piece from the pieces array if it exists
 // Otherwise returns undefined
 function getPieceFromArray(domNode) {
+  // console.log("passed in DOM node", domNode)
   let x = domNode.attr('x');
   let y = domNode.attr('y');
 
@@ -125,11 +150,13 @@ function getPieceFromArray(domNode) {
       return piece;
     }
   });
-
-  if (locatedNode.length) {
-    return locatedNode[0];
-  } else {
-    return undefined;
+  //Check to see if there is an x and y before returning anything
+  if (x && y){
+    if (locatedNode.length) {
+      return locatedNode[0];
+    } else {
+      return null;
+    }
   }
 }
 
