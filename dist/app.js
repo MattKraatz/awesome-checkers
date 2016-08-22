@@ -1,24 +1,31 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
-"use strict";
+ "use strict";
 
 let pieces = require('./scripts');
 
-var _movePhase = false;
-var x;
-var y;
+let _movePhase = false;
+let x;
+let y;
+let currentPiece;
 
 function setEvents () {
 	$('.emptySpace').on('click', checkSpace);
 
 	function checkSpace (e) {
-    let currentPiece = pieces.getPieceFromArray($(e.currentTarget));
-    if(!_movePhase && currentPiece) {
-		  console.dir(currentPiece);
-			x = parseInt(e.currentTarget.attributes.x.value);
-			y = parseInt(e.currentTarget.attributes.y.value);
-      getPieceColor(currentPiece);
-      console.log("move phase is: ", _movePhase)
-		}
+    if (currentPiece){
+    var selectedPiece = currentPiece;
+    }
+    currentPiece = pieces.getPieceFromArray($(e.currentTarget));
+      if (_movePhase){
+        makeMove(selectedPiece, e)
+      }
+      if(!_movePhase && currentPiece) {
+  		  console.dir(currentPiece);
+  			x = parseInt(e.currentTarget.attributes.x.value);
+  			y = parseInt(e.currentTarget.attributes.y.value);
+        getPieceColor(currentPiece);
+        console.log("move phase is: ", _movePhase)
+  		}
 	};
 
   function getPieceColor (currentPiece){
@@ -39,48 +46,31 @@ function setEvents () {
     if (move1 === null || move2 === null){
       console.log("can move")
       currentPiece.canMove = true;
-      makeMove(currentPiece)
     }
     if (move1){
       if (move1.color === opponent && !jump1){
         console.log("can jump")
         currentPiece.canJump = true;
-        makeMove(currentPiece)
       }
-<<<<<<< HEAD
     }
     if (move2){
       if (move2.color === opponent && !jump2){
         console.log("can jump")
         currentPiece.canJump = true;
-        makeMove(currentPiece)
-=======
-      if (topRight){
-        if (topRight.color === "black" && !topJumpRight){
-          console.log("can jump right")
-          currentPiece.canJump = true;
-        }
-      }
-      if (topLeft){
-        if (topLeft.color === "black" && !topJumpLeft){
-          console.log("can jump left")
-          currentPiece.canJump = true;
-        }
->>>>>>> 69aeb015530721a3d5a33108910adb09e4b6ef6a
       }
     }
     _movePhase = currentPiece.canMove || currentPiece.canJump
   };
 
-  function makeMove(currentPiece){
-    if (_movePhase) {
-      $('.emptySpace').on('click', getLocation);
-
-      function getLocation(e){
-        var newLocation = getPieceFromArray(e.currentTarget)
-        console.log("New Location", newLocation)
-      }
-    }
+  function makeMove(currentPiece, e){
+    console.log("current piece", currentPiece);
+    let selectedSpace = pieces.getCoordinates($(e.currentTarget));
+    console.log("New Location x", selectedSpace.x);
+    console.log("New Location y", selectedSpace.y);
+    currentPiece.changeCoords(parseInt(selectedSpace.x), parseInt(selectedSpace.y));
+    console.log(currentPiece);
+    _movePhase = false;
+    pieces.populatePieces();
   }
 
 };
@@ -174,6 +164,12 @@ function getPieceFromArray(domNode) {
   }
 }
 
+function getCoordinates(element){
+  let x = element.attr('x');
+  let y = element.attr('y');
+  return {x, y}
+}
+
 function getArrayOfPieces (){
   return arrayOfPieces;
 }
@@ -221,6 +217,6 @@ function populatePieces() {
     }
 }
 
-module.exports = {createCheckerboard, createPieces, getArrayOfPieces, populatePieces, getPieceFromArray};
+module.exports = {createCheckerboard, createPieces, getArrayOfPieces, populatePieces, getPieceFromArray, getCoordinates};
 
 },{"./pieces.js":2}]},{},[3]);
