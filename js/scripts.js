@@ -24,6 +24,12 @@ function getPieceFromArray(domNode) {
   }
 }
 
+function getCoordinates(element){
+  let x = element.attr('x');
+  let y = element.attr('y');
+  return {x, y}
+}
+
 function getArrayOfPieces (){
   return arrayOfPieces;
 }
@@ -71,4 +77,4 @@ function populatePieces() {
     }
 }
 
-module.exports = {createCheckerboard, createPieces, getArrayOfPieces, populatePieces, getPieceFromArray};
+module.exports = {createCheckerboard, createPieces, getArrayOfPieces, populatePieces, getPieceFromArray, getCoordinates};

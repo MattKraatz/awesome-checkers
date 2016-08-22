@@ -1,23 +1,30 @@
-"use strict";
+ "use strict";
 
 let pieces = require('./scripts');
 
-var _movePhase = false;
-var x;
-var y;
+let _movePhase = false;
+let x;
+let y;
+let currentPiece;
 
 function setEvents () {
 	$('.emptySpace').on('click', checkSpace);
 
 	function checkSpace (e) {
-    let currentPiece = pieces.getPieceFromArray($(e.currentTarget));
-    if(!_movePhase && currentPiece) {
-		  console.dir(currentPiece);
-			x = parseInt(e.currentTarget.attributes.x.value);
-			y = parseInt(e.currentTarget.attributes.y.value);
-      getPieceColor(currentPiece);
-      console.log("move phase is: ", _movePhase)
-		}
+    if (currentPiece){
+    var selectedPiece = currentPiece;
+    }
+    currentPiece = pieces.getPieceFromArray($(e.currentTarget));
+      if (_movePhase){
+        makeMove(selectedPiece, e)
+      }
+      if(!_movePhase && currentPiece) {
+  		  console.dir(currentPiece);
+  			x = parseInt(e.currentTarget.attributes.x.value);
+  			y = parseInt(e.currentTarget.attributes.y.value);
+        getPieceColor(currentPiece);
+        console.log("move phase is: ", _movePhase)
+  		}
 	};
 
   function getPieceColor (currentPiece){
@@ -38,34 +45,31 @@ function setEvents () {
     if (move1 === null || move2 === null){
       console.log("can move")
       currentPiece.canMove = true;
-      makeMove(currentPiece)
     }
     if (move1){
       if (move1.color === opponent && !jump1){
         console.log("can jump")
         currentPiece.canJump = true;
-        makeMove(currentPiece)
       }
     }
     if (move2){
       if (move2.color === opponent && !jump2){
         console.log("can jump")
         currentPiece.canJump = true;
-        makeMove(currentPiece)
       }
     }
     _movePhase = currentPiece.canMove || currentPiece.canJump
   };
 
-  function makeMove(currentPiece){
-    if (_movePhase) {
-      $('.emptySpace').on('click', getLocation);
-
-      function getLocation(e){
-        var newLocation = getPieceFromArray(e.currentTarget)
-        console.log("New Location", newLocation)
-      }
-    }
+  function makeMove(currentPiece, e){
+    console.log("current piece", currentPiece);
+    let selectedSpace = pieces.getCoordinates($(e.currentTarget));
+    console.log("New Location x", selectedSpace.x);
+    console.log("New Location y", selectedSpace.y);
+    currentPiece.changeCoords(parseInt(selectedSpace.x), parseInt(selectedSpace.y));
+    console.log(currentPiece);
+    _movePhase = false;
+    pieces.populatePieces();
   }
 
 };
