@@ -6,6 +6,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-jsonlint');
   grunt.loadNpmTasks('grunt-htmlhint');
   grunt.loadNpmTasks('grunt-browserify');
+  grunt.loadNpmTasks('grunt-contrib-sass');
 
   // Plugin configuration
   grunt.initConfig({
@@ -58,7 +59,7 @@ module.exports = function(grunt) {
     sass: {
       dist: {
         files: {
-          'css/main.css': 'sass/main.scss'
+          'css/main.css' : 'sass/main.scss'
         }
       }
     },
