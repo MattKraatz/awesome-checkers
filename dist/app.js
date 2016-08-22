@@ -47,26 +47,12 @@ function setEvents () {
         currentPiece.canJump = true;
         makeMove(currentPiece)
       }
-<<<<<<< HEAD
     }
     if (move2){
       if (move2.color === opponent && !jump2){
         console.log("can jump")
         currentPiece.canJump = true;
         makeMove(currentPiece)
-=======
-      if (topRight){
-        if (topRight.color === "black" && !topJumpRight){
-          console.log("can jump right")
-          currentPiece.canJump = true;
-        }
-      }
-      if (topLeft){
-        if (topLeft.color === "black" && !topJumpLeft){
-          console.log("can jump left")
-          currentPiece.canJump = true;
-        }
->>>>>>> 69aeb015530721a3d5a33108910adb09e4b6ef6a
       }
     }
     _movePhase = currentPiece.canMove || currentPiece.canJump
