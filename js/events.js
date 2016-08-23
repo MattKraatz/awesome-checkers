@@ -89,12 +89,14 @@ function setEvents () {
         if (parseInt(selectedSpace.x) === coords.x && parseInt(selectedSpace.y) === coords.y) {
           currentPiece.changeCoords(parseInt(selectedSpace.x), parseInt(selectedSpace.y));
           currentPiece.validMoves = []
+          currentPiece.validJumps = []
         }
       })
     }
     currentPiece.validJumps.forEach( function (coords) {
       if (parseInt(selectedSpace.x) === coords.x && parseInt(selectedSpace.y) === coords.y) {
         currentPiece.changeCoords(parseInt(selectedSpace.x), parseInt(selectedSpace.y));
+        currentPiece.validMoves = []
         currentPiece.validJumps = []
       }
     })
