@@ -75,13 +75,20 @@ function setEvents () {
     _movePhase = currentPiece.canMove || currentPiece.canJump
   };
 
+//Okay for some reason currentPiece.validMoves grows out of control sometimes.
+//Not totally sure why, honestly
+//Each piece's moves keep getting added to the arrays
+
   function makeMove(currentPiece, e){
     console.log("current piece", currentPiece);
     let selectedSpace = pieces.getCoordinates($(e.currentTarget));
-    console.log("New Location x", selectedSpace.x);
-    console.log("New Location y", selectedSpace.y);
-    currentPiece.changeCoords(parseInt(selectedSpace.x), parseInt(selectedSpace.y));
-    console.log(currentPiece);
+
+    currentPiece.validMoves.forEach( function (coords) {
+      if (parseInt(selectedSpace.x) === coords.x && parseInt(selectedSpace.y) === coords.y) {
+        currentPiece.changeCoords(parseInt(selectedSpace.x), parseInt(selectedSpace.y));
+      }
+    })
+
     _movePhase = false;
     pieces.populatePieces();
   }
