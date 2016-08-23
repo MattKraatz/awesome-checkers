@@ -85,17 +85,18 @@ function setEvents () {
     console.log("current piece", currentPiece);
     let selectedSpace = pieces.getCoordinates($(e.currentTarget));
 
-
     if (currentPiece.canMove) {
       currentPiece.validMoves.forEach( function (coords) {
         if (parseInt(selectedSpace.x) === coords.x && parseInt(selectedSpace.y) === coords.y) {
           currentPiece.changeCoords(parseInt(selectedSpace.x), parseInt(selectedSpace.y));
+          currentPiece.validMoves = []
         }
       })
     }
     currentPiece.validJumps.forEach( function (coords) {
       if (parseInt(selectedSpace.x) === coords.x && parseInt(selectedSpace.y) === coords.y) {
         currentPiece.changeCoords(parseInt(selectedSpace.x), parseInt(selectedSpace.y));
+        currentPiece.validJumps = []
       }
     })
 
