@@ -1,9 +1,12 @@
 {
   "name": "template",
   "authors": [
-    "Matt Kraatz <matt.kraatz@gmail.com>"
+    "Matt Kraatz <matt.kraatz@gmail.com>",
+    "Matt Hamil",
+    "Casey Reed",
+    "Delaine Wendling"
   ],
-  "description": "boilerplate repo for new projects",
+  "description": "Checkers recreated with JavaScript",
   "main": "",
   "license": "MIT",
   "homepage": "",
