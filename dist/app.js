@@ -43,37 +43,71 @@ function setEvents () {
     let jump1 = pieces.getPieceFromArray($(`[x=${x+2}][y=${y+(2*number)}]`));
     let jump2 = pieces.getPieceFromArray($(`[x=${x-2}][y=${y+(2*number)}]`));
 
-    if (move1 === null || move2 === null){
+    if (move1 === null){
       console.log("can move")
       currentPiece.canMove = true;
+      currentPiece.validMoves.push({x: x + 1, y: y+number})
+      console.log(currentPiece)
+    }
+    if (move2 === null){
+      console.log("can move")
+      currentPiece.canMove = true;
+      currentPiece.validMoves.push({x: x - 1, y: y+number})
+      console.log(currentPiece)
     }
     if (move1){
       if (move1.color === opponent && !jump1){
         console.log("can jump")
         currentPiece.canJump = true;
+        currentPiece.canMove = false;
+        currentPiece.validJumps.push({x: x + 2, y: y+(2 * number)})
+        console.log(currentPiece)
       }
     }
     if (move2){
       if (move2.color === opponent && !jump2){
         console.log("can jump")
         currentPiece.canJump = true;
+        currentPiece.canMove = false;
+        currentPiece.validJumps.push({x: x - 2, y: y+(2 * number)})
+        console.log(currentPiece)
       }
     }
     _movePhase = currentPiece.canMove || currentPiece.canJump
   };
 
+//Okay for some reason currentPiece.validMoves grows out of control sometimes.
+//Also sometimes, the array is populated with double copies of movement coordinates
+//Not totally sure why, honestly
+//Each piece's moves keep getting added to the arrays
+
   function makeMove(currentPiece, e){
     console.log("current piece", currentPiece);
     let selectedSpace = pieces.getCoordinates($(e.currentTarget));
-    console.log("New Location x", selectedSpace.x);
-    console.log("New Location y", selectedSpace.y);
-    currentPiece.changeCoords(parseInt(selectedSpace.x), parseInt(selectedSpace.y));
-    console.log(currentPiece);
+
+    if (currentPiece.canMove) {
+      currentPiece.validMoves.forEach( function (coords) {
+        if (parseInt(selectedSpace.x) === coords.x && parseInt(selectedSpace.y) === coords.y) {
+          currentPiece.changeCoords(parseInt(selectedSpace.x), parseInt(selectedSpace.y));
+          currentPiece.validMoves = []
+          currentPiece.validJumps = []
+        }
+      })
+    }
+    currentPiece.validJumps.forEach( function (coords) {
+      if (parseInt(selectedSpace.x) === coords.x && parseInt(selectedSpace.y) === coords.y) {
+        currentPiece.changeCoords(parseInt(selectedSpace.x), parseInt(selectedSpace.y));
+        currentPiece.validMoves = []
+        currentPiece.validJumps = []
+      }
+    })
+
     _movePhase = false;
     pieces.populatePieces();
   }
-
 };
+
+//Future fixes: Make .canMove = false if .canJump = true
 
 module.exports = setEvents;
 
@@ -87,6 +121,8 @@ var Piece = function(){
   this.canBeJumped = false;
   this.color = null;
   this.node = null;
+  this.validMoves = [];
+  this.validJumps = [];
 }
 Piece.prototype.jump = function(){
 
