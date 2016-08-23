@@ -76,6 +76,7 @@ function setEvents () {
   };
 
 //Okay for some reason currentPiece.validMoves grows out of control sometimes.
+//Also sometimes, the array is populated with double copies of movement coordinates
 //Not totally sure why, honestly
 //Each piece's moves keep getting added to the arrays
 
@@ -83,7 +84,15 @@ function setEvents () {
     console.log("current piece", currentPiece);
     let selectedSpace = pieces.getCoordinates($(e.currentTarget));
 
-    currentPiece.validMoves.forEach( function (coords) {
+
+    if (currentPiece.canMove) {
+      currentPiece.validMoves.forEach( function (coords) {
+        if (parseInt(selectedSpace.x) === coords.x && parseInt(selectedSpace.y) === coords.y) {
+          currentPiece.changeCoords(parseInt(selectedSpace.x), parseInt(selectedSpace.y));
+        }
+      })
+    }
+    currentPiece.validJumps.forEach( function (coords) {
       if (parseInt(selectedSpace.x) === coords.x && parseInt(selectedSpace.y) === coords.y) {
         currentPiece.changeCoords(parseInt(selectedSpace.x), parseInt(selectedSpace.y));
       }
@@ -92,7 +101,6 @@ function setEvents () {
     _movePhase = false;
     pieces.populatePieces();
   }
-
 };
 
 //Future fixes: Make .canMove = false if .canJump = true
