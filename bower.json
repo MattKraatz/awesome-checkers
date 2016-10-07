@@ -1,0 +1,27 @@
+{
+  "name": "template",
+  "authors": [
+    "Matt Kraatz <matt.kraatz@gmail.com>",
+    "Matt Hamil",
+    "Casey Reed",
+    "Delaine Wendling"
+  ],
+  "description": "Checkers recreated with JavaScript",
+  "main": "",
+  "license": "MIT",
+  "homepage": "",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "^3.1.0",
+    "bootstrap": "^3.3.7"
+  },
+  "devDependencies": {
+    "jasmine-core": "jasmine#^2.4.1"
+  }
+}
