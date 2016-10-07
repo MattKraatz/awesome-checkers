@@ -8,24 +8,26 @@ let y;
 let currentPiece;
 
 function setEvents () {
-	$('.emptySpace').on('click', checkSpace);
+  $('.emptySpace').on('click', checkSpace);
 
-	function checkSpace (e) {
+  function checkSpace (e) {
     if (currentPiece){
-    var selectedPiece = currentPiece;
+      var selectedPiece = currentPiece;
     }
+
     currentPiece = pieces.getPieceFromArray($(e.currentTarget));
-      if (_movePhase){
-        makeMove(selectedPiece, e)
-      }
-      if(!_movePhase && currentPiece) {
-  		  console.dir(currentPiece);
-  			x = parseInt(e.currentTarget.attributes.x.value);
-  			y = parseInt(e.currentTarget.attributes.y.value);
-        getPieceColor(currentPiece);
-        console.log("move phase is: ", _movePhase)
-  		}
-	};
+
+    if (_movePhase){
+      makeMove(selectedPiece, e)
+    }
+    if(!_movePhase && currentPiece) {
+      console.dir(currentPiece);
+      x = parseInt(e.currentTarget.attributes.x.value);
+      y = parseInt(e.currentTarget.attributes.y.value);
+      getPieceColor(currentPiece);
+      console.log("move phase is: ", _movePhase)
+    }
+  };
 
   function getPieceColor (currentPiece){
     if(currentPiece.color === "red"){

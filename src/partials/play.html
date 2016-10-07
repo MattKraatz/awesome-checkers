@@ -1,0 +1,7 @@
+<div class="checkerBoard" ng-init="createCheckerboard()">
+  <div class="boardRow" ng-repeat="(key, value) in board">
+    <div ng-repeat="(key2, value2) in value" class="boardSpace">
+      <div ng-class="board.{{key}}.{{key2}}"></div>
+    </div>
+  </div>
+</div>

@@ -5,17 +5,28 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Awesome Checkers</title>
-  <link href="bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" type="text/css" href="css/main.css">
+  <link href="lib/bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" type="text/css" href="dist/main.css">
 </head>
-<body>
-<div class="container">
-  <div class="checkerBoard"></div>
-</div>
+<body ng-app="mainApp">
 
-<script type="text/javascript" src="bower_components/jquery/dist/jquery.min.js"></script>
-<script type="text/javascript" src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
-<script type="text/javascript" src="dist/app.js"></script>
+  <div ng-view></div>
+
+<!-- THIRD PARTY DEPENCENCIES -->
+<script type="text/javascript" src="lib/bower_components/jquery/dist/jquery.min.js"></script>
+<script type="text/javascript" src="lib/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="lib/bower_components/angular/angular.js"></script>
+<script type="text/javascript" src="lib/bower_components/angular-route/angular-route.js"></script>
+
+<!-- MAIN APP -->
+<script type="text/javascript" src="src/app.js"></script>
+
+<!-- FACTORIES -->
+
+<!-- CONTROLLERS -->
+<script type="text/javascript" src="src/controllers/playCtrl.js"></script>
+
+<!-- DEV LIVERELOAD SCRIPT -->
 <!-- <script src="//localhost:35729/livereload.js"></script> -->
 </body>
 </html>
