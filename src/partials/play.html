@@ -1,7 +1,10 @@
-<div class="checkerBoard" ng-init="createCheckerboard()">
+<div>Player Turn: <span ng-bind="playerTurn"></span></div>
+<div>Move Phase: <span ng-bind="movePhase"></span></div>
+<div>Selected Space: <span ng-bind="selectedSpace"></span></div>
+<div class="checkerBoard" ng-init="initGame()">
   <div class="boardRow" ng-repeat="(key, value) in board">
     <div ng-repeat="(key2, value2) in value" class="boardSpace">
-      <div ng-class="board.{{key}}.{{key2}}"></div>
+      <div ng-class="board[{{key}}][{{key2}}]" row="{{key}}" column="{{key2}}" ng-click="checkClick($event)"></div>
     </div>
   </div>
 </div>
