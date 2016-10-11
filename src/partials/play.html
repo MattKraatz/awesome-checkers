@@ -1,6 +1,5 @@
 <div>Player Turn: <span ng-bind="playerTurn"></span></div>
 <div>Move Phase: <span ng-bind="movePhase"></span></div>
-<div>Selected Space: <span ng-bind="selectedSpace"></span></div>
 <div class="checkerBoard" ng-init="initGame()">
   <div class="boardRow" ng-repeat="(key, value) in board">
     <div ng-repeat="(key2, value2) in value" class="boardSpace">

@@ -10,7 +10,7 @@ app.controller('playCtrl', function($scope,newBoardFact) {
   $scope.board = {};
   $scope.movePhase = false;
   $scope.playerTurn = "black";
-  $scope.selectedSpace = [];
+  $scope.selectedSpace = {};
   $scope.availableMoves = [];
   $scope.availableCaptures = [];
 
@@ -23,12 +23,14 @@ app.controller('playCtrl', function($scope,newBoardFact) {
   // Handle Move Phase and Player Turn on click
   $scope.checkClick = (evt) => {
     let coords = returnCoords(evt);
-    if (!$scope.movePhase && $scope.board[coords[0]][coords[1]][$scope.playerTurn]) {
-      $scope.movePhase = true;
-      $scope.selectedSpace = coords;
-      checkAvailableMoves(coords);
+    if (!$scope.movePhase) {
+      if ($scope.board[coords.x][coords.y][$scope.playerTurn]) {
+        $scope.movePhase = true;
+        $scope.selectedSpace = coords;
+        checkAvailableMoves(coords);
+      }
       if (!$scope.availableMoves.length && !$scope.availableCaptures.length) {
-        $scope.selectedSpace = [];
+        $scope.selectedSpace = {};
         $scope.movePhase = false;
       }
     } else {
@@ -38,72 +40,95 @@ app.controller('playCtrl', function($scope,newBoardFact) {
 
   // Initialize Move Phase by Identifying Available Moves and Captures, if available
   function checkAvailableMoves(coords) {
-    let row = coords[0],
-     column = coords[1];
-    if ($scope.playerTurn === "black") {
-      let moveOptA = $scope.board[row + 1][column - 1];
-      let captureOptA = $scope.board[row + 2][column - 2];
+    let row = coords.x,
+     column = coords.y,
+     selectedPiece = $scope.board[$scope.selectedSpace.x][$scope.selectedSpace.y],
+     moveOptA,
+     moveOptB,
+     captureOptA,
+     captureOptB;
+     console.log(selectedPiece);
+     // Black player logic
+    if ($scope.playerTurn === "black" || ($scope.playerTurn === "red" && selectedPiece.king)) {
+      if ($scope.board[row + 1]) {
+        moveOptA = $scope.board[row + 1][column - 1];
+      }
+      if ($scope.board[row + 2]) {
+        captureOptA = $scope.board[row + 2][column - 2];
+      }
       if (moveOptA && moveOptA.blank) {
         moveOptA.movable = true;
-        $scope.availableMoves.push([row + 1, column - 1]);
-      } else if (moveOptA && moveOptA.red) {
+        $scope.availableMoves.push(customCoords(row + 1, column - 1));
+      } else if (moveOptA && moveOptA.red || (selectedPiece.king && moveOptA.black)) {
         if (captureOptA && captureOptA.blank) {
           captureOptA.movable = true;
-          $scope.availableCaptures.push([row + 2, column - 2,[row + 1, column - 1]]);
+          $scope.availableCaptures.push(customCoords(row + 2, column - 2,customCoords(row + 1, column - 1)));
         }
       }
-      let moveOptB = $scope.board[row + 1][column + 1];
-      let captureOptB = $scope.board[row + 2][column + 2];
+      if ($scope.board[row + 1]) {
+        moveOptB = $scope.board[row + 1][column + 1];
+      }
+      if ($scope.board[row + 2]) {
+        captureOptB = $scope.board[row + 2][column + 2];
+      }
       if (moveOptB && moveOptB.blank) {
         moveOptB.movable = true;
-        $scope.availableMoves.push([row + 1, column + 1]);
-      } else if (moveOptB && moveOptB.red) {
+        $scope.availableMoves.push(customCoords(row + 1, column + 1));
+      } else if (moveOptB && moveOptB.red || (selectedPiece.king && moveOptB.black)) {
         if (captureOptB && captureOptB.blank) {
           captureOptB.movable = true;
-          $scope.availableCaptures.push([row + 2, column + 2,[row + 1, column + 1]]);
+          $scope.availableCaptures.push(customCoords(row + 2, column + 2,customCoords(row + 1, column + 1)));
         }
       }
-    } else if ($scope.playerTurn === "red") {
-      let moveOptA = $scope.board[row - 1][column - 1];
-      let captureOptA = $scope.board[row - 2][column - 2];
+    }
+    // Red player logic
+    if ($scope.playerTurn === "red" || ($scope.playerTurn === "black" && selectedPiece.king)) {
+      moveOptA = $scope.board[row - 1][column - 1];
+      if ($scope.board[row - 2]) {
+        captureOptA = $scope.board[row - 2][column - 2];
+      }
       if (moveOptA && moveOptA.blank) {
         moveOptA.movable = true;
-        $scope.availableMoves.push([row - 1, column - 1]);
-      } else if (moveOptA && moveOptA.red) {
+        $scope.availableMoves.push(customCoords(row - 1, column - 1));
+      } else if (moveOptA && moveOptA.black || (selectedPiece.king && moveOptA.red)) {
         if (captureOptA && captureOptA.blank) {
           captureOptA.movable = true;
-          $scope.availableCaptures.push([row - 2, column - 2,[row - 1,column - 1]]);
+          $scope.availableCaptures.push(customCoords(row - 2, column - 2,customCoords(row - 1,column - 1)));
         }
       }
-      let moveOptB = $scope.board[row - 1][column + 1];
-      let captureOptB = $scope.board[row - 2][column + 2];
+      moveOptB = $scope.board[row - 1][column + 1];
+      if ($scope.board[row - 2]) {
+        captureOptB = $scope.board[row - 2][column + 2];
+      }
       if (moveOptB && moveOptB.blank) {
         moveOptB.movable = true;
-        $scope.availableMoves.push([row - 1, column + 1]);
-      } else if (moveOptB && moveOptB.red) {
+        $scope.availableMoves.push(customCoords(row - 1, column + 1));
+      } else if (moveOptB && moveOptB.black || (selectedPiece.king && moveOptB.red)) {
         if (captureOptB && captureOptB.blank) {
           captureOptB.movable = true;
-          $scope.availableCaptures.push([row - 2, column + 2,[row - 1, column + 1]]);
+          $scope.availableCaptures.push(customCoords(row - 2, column + 2,customCoords(row - 1, column + 1)));
         }
       }
+    }
+    if ($scope.availableCaptures.length > 0 && $scope.availableMoves.length > 0) {
+      clearAvailableMoves();
     }
   }
 
   function checkSelectedMove(coords) {
-    if (coords.toString() === $scope.selectedSpace.toString()) {
+    if (stringifyCoords(coords) === stringifyCoords($scope.selectedSpace)) {
       closeMovePhase();
     } else {
       if ($scope.availableCaptures.length) {
         $scope.availableCaptures.forEach((capture) => {
-          let move = [capture[0],capture[1]];
-          if (move.toString() === coords.toString()) {
+          if (stringifyCoords(capture) === stringifyCoords(coords)) {
             console.log("valid capture");
             executeMove(coords,capture);
           }
         });
       } else if ($scope.availableMoves.length) {
         $scope.availableMoves.forEach((move) => {
-          if (move.toString() === coords.toString()) {
+          if (stringifyCoords(move) === stringifyCoords(coords)) {
             console.log("valid move")
             executeMove(coords);
           }
@@ -113,36 +138,44 @@ app.controller('playCtrl', function($scope,newBoardFact) {
   }
 
   function executeMove(coords,captureCoords) {
-    $scope.board[$scope.selectedSpace[0]][$scope.selectedSpace[1]].blank = true;
-    $scope.board[$scope.selectedSpace[0]][$scope.selectedSpace[1]][$scope.playerTurn] = false;
-    $scope.board[coords[0]][coords[1]].blank = false;
-    $scope.board[coords[0]][coords[1]][$scope.playerTurn] = true;
-    if (captureCoords && captureCoords.length) {
+    // Move handling
+    $scope.board[$scope.selectedSpace.x][$scope.selectedSpace.y].blank = true;
+    $scope.board[$scope.selectedSpace.x][$scope.selectedSpace.y][$scope.playerTurn] = false;
+    $scope.board[coords.x][coords.y].blank = false;
+    $scope.board[coords.x][coords.y][$scope.playerTurn] = true;
+    // Capture handling
+    if (captureCoords && captureCoords.capture) {
       let capturedPlayer = "";
       if ($scope.playerTurn === "black") { capturedPlayer = "red"; } else { capturedPlayer = "black"; }
-      $scope.board[captureCoords[2][0]][captureCoords[2][1]][capturedPlayer] = false;
-      $scope.board[captureCoords[2][0]][captureCoords[2][1]].king = false;
-      $scope.board[captureCoords[2][0]][captureCoords[2][1]].blank = true;
+      $scope.board[captureCoords.capture.x][captureCoords.capture.y][capturedPlayer] = false;
+      $scope.board[captureCoords.capture.x][captureCoords.capture.y].king = false;
+      $scope.board[captureCoords.capture.x][captureCoords.capture.y].blank = true;
+    };
+    // King Promotion handling
+    if ($scope.playerTurn === "black" && coords.x === 8) {
+      $scope.board[coords.x][coords.y].king = true;
+      console.log("king me!");
+    } else if ($scope.playerTurn === "red" && coords.x === 1) {
+      $scope.board[coords.x][coords.y].king = true;
+      console.log("king me!");
+    };
+    // King Move handling
+    if ($scope.board[$scope.selectedSpace.x][$scope.selectedSpace.y].king) {
+      $scope.board[$scope.selectedSpace.x][$scope.selectedSpace.y].king = false;
+      $scope.board[coords.x][coords.y].king = true;
     }
     closeMovePhase();
     changePlayerTurn();
   }
 
   function closeMovePhase() {
-    $scope.availableMoves.forEach((move) => {
-      let row = move[0],
-       column = move[1];
-      $scope.board[row][column].movable = false;
-    })
-    $scope.availableMoves = [];
+    clearAvailableMoves();
     $scope.availableCaptures.forEach((move) => {
-      let row = move[0],
-       column = move[1];
-      $scope.board[row][column].movable = false;
+      $scope.board[move.x][move.y].movable = false;
     })
     $scope.availableCaptures = [];
-    $scope.board[$scope.selectedSpace[0]][$scope.selectedSpace[1]].selected = false;
-    $scope.selectedSpace = [];
+    $scope.board[$scope.selectedSpace.x][$scope.selectedSpace.y].selected = false;
+    $scope.selectedSpace = {};
     $scope.movePhase = false;
   }
 
@@ -154,11 +187,36 @@ app.controller('playCtrl', function($scope,newBoardFact) {
     }
   }
 
+  function clearAvailableMoves() {
+    $scope.availableMoves.forEach((move) => {
+      $scope.board[move.x][move.y].movable = false;
+    })
+    $scope.availableMoves = [];
+  }
+
   // Evalutes click event and returns array of coordinates: [column,row]
   function returnCoords(evt) {
-    let coords = [parseInt(evt.currentTarget.attributes.getNamedItem("row").value),parseInt(evt.currentTarget.attributes.getNamedItem("column").value)];
-    console.log("row:",coords[0],"column:",coords[1]);
+    let coords = {
+      x: parseInt(evt.currentTarget.attributes.getNamedItem("row").value),
+      y: parseInt(evt.currentTarget.attributes.getNamedItem("column").value)
+    };
+    console.log("row:",coords.x,"column:",coords.y);
     return coords;
+  }
+
+  function customCoords(a,b,c) {
+    let coords = {
+      x: a,
+      y: b
+    }
+    if (c) {
+      coords.capture = c;
+    }
+    return coords;
+  }
+
+  function stringifyCoords(coords) {
+    return coords.x.toString() + coords.y.toString();
   }
 
 });
